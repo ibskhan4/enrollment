@@ -1,0 +1,27 @@
+---
+title: "enrollment"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reprex)
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(gt)
+```
+
+```{r}
+enrollment_data <- read_excel("class_enrollment_summary_by_term_2.13.20.xlsx", skip = 3) %>% 
+  clean_names() %>%
+  filter(!is.na(course_name)) %>% 
+  group_by(course_department) %>%
+  summarize(pop = sum(total)) %>%
+  arrange(desc(pop)) %>%
+  slice(1:5) %>% 
+  gt() %>% 
+  tab_header(title = "Top Five Departments") 
+enrollment_data
+```
+
